@@ -1,0 +1,90 @@
+body > img:first-child {
+  /* overflow: hidden; */
+  position: fixed;
+  margin: 0;
+  padding: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  z-index: -1;
+}
+
+.cau_hoi {
+  /* background-color: aquamarine; */
+  margin-left: 2%;
+  margin-top: 2%;
+  width: 45%;
+  height: 175px;
+  position: relative;
+  display: flex;
+}
+
+.cau_hoi img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.text-overlay {
+  margin: 10px;
+  margin-top: 30px;
+  /* transform: translate(-50%, -50%); */
+  /* More */
+  color: white;
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+  background: rgba(0, 0, 0, 0);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+}
+
+.fisher {
+  position: fixed;
+  top: -10px;
+  right: -30px;
+  z-index: 1000;
+}
+
+.fisher1 {
+  position: fixed;
+  top: 50px;
+  right: 350px;
+  z-index: 1000;
+}
+
+.fisher_img {
+  display: block;
+  width: auto;
+  height: 250px;
+}
+
+.says {
+  display: block;
+  width: 100%;
+  height: 130px;
+  transform: translate(-75px, 30px);
+}
+
+.question1 {
+  position: fixed;
+  top: 40px;
+  right: 125px;
+}
+
+.question2 {
+  position: fixed;
+  top: 100px;
+  right: 525px;
+}
+
+.sea {
+  display: block;
+  position: fixed;
+  top: 350px;
+  margin-left: -50%;
+  padding: 0;
+  /* border: 5px solid red; */
+}
