@@ -4,7 +4,49 @@ let screenHeight = window.innerHeight;
 const ctx = canvas.getContext("2d");
 
 canvas.width = screenWidth * 2;
-canvas.height = screenHeight - 370;
+canvas.height = screenHeight - 100;
+
+// Functions
+
+let mouseX = 0;
+let mouseY = 0;
+
+function animation() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  fisher1.ve();
+  fisher2.ve();
+  for (let i = 0; i < fishList.length; i++) {
+    if (fishList[i] != catchedFish) {
+      fishList[i].capNhatViTri();
+      fishList[i].ve();
+    } else if (fishList[i] == catchedFish) {
+      fishList[i].ve();
+    }
+  }
+
+  requestAnimationFrame(animation);
+}
+
+function getMousePosition(event) {
+  let rect = canvas.getBoundingClientRect();
+  mouseX = event.clientX - rect.left;
+  mouseY = event.clientY - rect.top;
+}
+
+function checkCatched(fish) {
+  if (
+    mouseX > fish.x &&
+    mouseX < fish.x + fish.size &&
+    mouseY > fish.y &&
+    mouseY < fish.y + fish.size
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+//Class
 
 class fish {
   constructor(x, y, size, speed, says) {
@@ -17,11 +59,11 @@ class fish {
     this.vy = 0;
 
     this.hinhAnh = new Image();
-    this.hinhAnh.src = "src/img/Fish.png";
+    this.hinhAnh.src = "../src/img/round2/Fish.png";
     this.hinhAnhDaLoad = false;
 
     this.hinhAnh1 = new Image();
-    this.hinhAnh1.src = "src/img/Fish_fliped.png";
+    this.hinhAnh1.src = "../src/img/round2/Fish_fliped.png";
 
     this.hinhAnh.onload = () => {
       this.hinhAnhDaLoad = true;
@@ -29,15 +71,17 @@ class fish {
   }
 
   capNhatViTri() {
-    this.x = this.x + this.vx;
-    this.y = this.y + this.vy;
+    if (this.y > canvas.height - 350) {
+      this.x = this.x + this.vx;
+      this.y = this.y + this.vy;
 
-    // Kiểm tra va chạm biên
-    if (this.x < 0 || this.x + this.size > canvas.width) {
-      this.vx = -this.vx;
-    }
-    if (this.y < 0 || this.y + this.size > canvas.height) {
-      this.vy = -this.vy;
+      // Kiểm tra va chạm biên
+      if (this.x < 0 || this.x + this.size > canvas.width) {
+        this.vx = -this.vx;
+      }
+      if (this.y < 0 || this.y + this.size > canvas.height) {
+        this.vy = -this.vy;
+      }
     }
   }
 
@@ -96,6 +140,80 @@ class fish {
   }
 }
 
+class monkey {
+  constructor(x, y, says) {
+    this.x = x;
+    this.y = y;
+    this.size = 200;
+    this.say = says;
+
+    this.hinhAnh = new Image();
+    this.hinhAnh.src = "../src/img/round2/Fisher.png";
+    this.hinhAnhDaLoad = false;
+
+    this.hinhAnh1 = new Image();
+    this.hinhAnh1.src = "../src/img/round2/Fisher 1.png";
+
+    this.hinhAnh.onload = () => {
+      this.hinhAnhDaLoad = true;
+    };
+  }
+
+  veRoundRect() {
+    ctx.strokeStyle = "rgb(0, 0, 0)";
+    ctx.beginPath();
+    ctx.roundRect(
+      this.x - this.size + 150,
+      this.y - 45,
+      this.size * 1.5,
+      this.size * 0.25,
+      15,
+    );
+    ctx.stroke();
+  }
+
+  veBackground() {
+    ctx.beginPath();
+    ctx.fillStyle = "rgb(255, 255, 255)";
+    ctx.roundRect(
+      this.x - this.size + 150,
+      this.y - 45,
+      this.size * 1.5,
+      this.size * 0.25,
+      15,
+    );
+    ctx.fill();
+  }
+
+  veText() {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
+    ctx.font = "20px serif";
+    if (Array.isArray(this.say)) {
+      for (let i = 0; i < this.say.length; i++) {
+        ctx.fillText(
+          this.say[i],
+          this.x - this.size + 160,
+          this.y - 20,
+          this.size * 5,
+        );
+      }
+    }
+  }
+
+  ve() {
+    if (this.hinhAnhDaLoad) {
+      if (this.x == 1975) {
+        ctx.drawImage(this.hinhAnh, this.x, this.y, this.size, this.size);
+      } else {
+        ctx.drawImage(this.hinhAnh1, this.x, this.y, this.size, this.size);
+      }
+      this.veBackground();
+      this.veRoundRect();
+      this.veText();
+    }
+  }
+}
+
 // Tạo danh sách cá
 const dapAn = [
   ["Tứ giác ABCD có các cạnh đối AB và DC,", "AD và BC song song với nhau"],
@@ -112,12 +230,26 @@ const dapAn = [
   ["Tứ giác ABCD có 2 đường chéo", "AC và BD bằng nhau"],
 ];
 
+// Events
+
+let catchedFish;
 const fishList = [];
+
+let fisher1 = new monkey(800 * 2, 125, ["Vì sao ABCD là hình bình hành?"]);
+let fisher2 = new monkey(1975, 50, ["Vì sao ABCD là hình thang cân?"]);
+
+animation();
+getMousePosition(canvas);
+
+for (let i of fishList) {
+  i.ve();
+}
+
 for (let i = 0; i < 12; i++) {
   fishList.push(
     new fish(
       Math.random() * (canvas.width - 50),
-      Math.random() * (canvas.height - 50),
+      250 + Math.random() * (canvas.height - 300),
       50,
       Math.random() * (1.5 - 0.5) + 0.5,
       dapAn[i],
@@ -125,26 +257,41 @@ for (let i = 0; i < 12; i++) {
   );
 }
 
-function animation() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  for (let i = 0; i < fishList.length; i++) {
-    fishList[i].capNhatViTri();
-    fishList[i].ve(ctx);
-  }
-
-  requestAnimationFrame(animation);
-}
-
-animation();
-
-for (let i of fishList) {
-  i.ve();
-}
-
 window.addEventListener("resize", () => {
   screenWidth = window.innerWidth;
   screenHeight = window.innerHeight;
-  canvas.width = screenWidth;
+  canvas.width = screenWidth * 2;
   canvas.height = screenHeight - 100;
+});
+
+canvas.addEventListener("mousedown", (event) => {
+  const mousePos = getMousePosition(event);
+  for (let i of fishList) {
+    if (checkCatched(i) == true) {
+      catchedFish = i;
+      console.log(catchedFish.say);
+    }
+  }
+});
+
+canvas.addEventListener("mousemove", () => {
+  if (catchedFish != null) {
+    catchedFish.x = mouseX - catchedFish.size * 0.5;
+    catchedFish.y = mouseY - catchedFish.size * 0.5;
+    console.log(mouseX + " - " + mouseY);
+    console.log(catchedFish.x + " - " + catchedFish.y);
+    catchedFish.ve();
+    catchedFish.veBackground();
+    catchedFish.veText();
+  }
+});
+
+canvas.addEventListener("mousemove", (e) => {
+  getMousePosition(e);
+});
+
+canvas.addEventListener("mouseup", () => {
+  if (catchedFish != null) {
+    catchedFish = null;
+  }
 });
