@@ -3,6 +3,8 @@ let screenWidth = window.innerWidth;
 let screenHeight = window.innerHeight;
 const ctx = canvas.getContext("2d");
 
+const blackScreen = document.getElementById("blackScreen");
+
 canvas.width = screenWidth * 2;
 canvas.height = screenHeight - 100;
 
@@ -10,6 +12,8 @@ canvas.height = screenHeight - 100;
 
 let mouseX = 0;
 let mouseY = 0;
+let score = 0;
+let fishingCount = 9;
 
 function animation() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -71,7 +75,7 @@ class fish {
   }
 
   capNhatViTri() {
-    if (this.y > canvas.height - 350) {
+    if (this.y > canvas.height - 375) {
       this.x = this.x + this.vx;
       this.y = this.y + this.vy;
 
@@ -230,6 +234,21 @@ const dapAn = [
   ["Tứ giác ABCD có 2 đường chéo", "AC và BD bằng nhau"],
 ];
 
+const dapAnTrai = [
+  ["Tứ giác ABCD có các cạnh đối AB và DC,", "AD và BC song song với nhau"],
+  ["Tứ giác ABCD có các cạnh đối AB và DC,", "AD và BC bằng nhau"],
+  ["Tứ giác ABCD có các góc đối A và C,", "B và D bằng nhau"],
+  ["Tứ giác ABCD có một cặp cạnh đối", "AB và DC song song và bằng nhau"],
+  ["Tứ giác ABCD có một cặp cạnh đối", "AD và BC song song và bằng nhau"],
+];
+
+const dapAnPhai = [
+  ["Hình thang ABCD có 2 góc kề", "một đáy A và D bằng nhau"],
+  ["Hình thang ABCD có 2 góc kề", "một đáy B và C bằng nhau"],
+  ["Hình thang ABCD có 2 góc kề", "một đáy A và B bằng nhau"],
+  ["Hình thang ABCD có 2 góc kề", "một đáy C và D bằng nhau"],
+];
+
 // Events
 
 let catchedFish;
@@ -265,11 +284,12 @@ window.addEventListener("resize", () => {
 });
 
 canvas.addEventListener("mousedown", (event) => {
-  const mousePos = getMousePosition(event);
-  for (let i of fishList) {
-    if (checkCatched(i) == true) {
-      catchedFish = i;
-      console.log(catchedFish.say);
+  if (fishingCount != 0) {
+    const mousePos = getMousePosition(event);
+    for (let i of fishList) {
+      if (checkCatched(i) == true) {
+        catchedFish = i;
+      }
     }
   }
 });
@@ -278,8 +298,6 @@ canvas.addEventListener("mousemove", () => {
   if (catchedFish != null) {
     catchedFish.x = mouseX - catchedFish.size * 0.5;
     catchedFish.y = mouseY - catchedFish.size * 0.5;
-    console.log(mouseX + " - " + mouseY);
-    console.log(catchedFish.x + " - " + catchedFish.y);
     catchedFish.ve();
     catchedFish.veBackground();
     catchedFish.veText();
@@ -292,6 +310,49 @@ canvas.addEventListener("mousemove", (e) => {
 
 canvas.addEventListener("mouseup", () => {
   if (catchedFish != null) {
+    if (catchedFish.y <= canvas.height - 375) {
+      if (catchedFish.x < 1975 && catchedFish.x > 1500) {
+        fishingCount -= 1;
+        for (let i in dapAnTrai) {
+          if (JSON.stringify(catchedFish.say) == JSON.stringify(dapAnTrai[i])) {
+            score++;
+            break;
+          }
+        }
+        for (let j in fishList) {
+          if (
+            JSON.stringify(catchedFish.say) == JSON.stringify(fishList[j].say)
+          ) {
+            fishList.splice(j, 1);
+            break;
+          }
+        }
+      } else if (catchedFish.x > 1975) {
+        fishingCount -= 1;
+        for (let i in dapAnPhai) {
+          if (JSON.stringify(catchedFish.say) == JSON.stringify(dapAnPhai[i])) {
+            score++;
+            break;
+          }
+        }
+        for (let j in fishList) {
+          if (
+            JSON.stringify(catchedFish.say) == JSON.stringify(fishList[j].say)
+          ) {
+            fishList.splice(j, 1);
+            break;
+          }
+        }
+      } else {
+        catchedFish.y = 250 + Math.random() * (canvas.height - 300);
+      }
+    }
     catchedFish = null;
+  }
+  console.log(score + " - " + fishingCount);
+  if (fishingCount == 0) {
+    blackScreen.style.opacity = 1;
+    blackScreen.style.pointerEvents = "all";
+    blackScreen.querySelector("#score").textContent = score;
   }
 });
