@@ -59,11 +59,11 @@ class fish {
     this.vy = 0;
 
     this.hinhAnh = new Image();
-    this.hinhAnh.src = "../src/img/round2/Fish.png";
+    this.hinhAnh.src = "src/img/round2/Fish.png";
     this.hinhAnhDaLoad = false;
 
     this.hinhAnh1 = new Image();
-    this.hinhAnh1.src = "../src/img/round2/Fish_fliped.png";
+    this.hinhAnh1.src = "src/img/round2/Fish_fliped.png";
 
     this.hinhAnh.onload = () => {
       this.hinhAnhDaLoad = true;
@@ -148,11 +148,11 @@ class monkey {
     this.say = says;
 
     this.hinhAnh = new Image();
-    this.hinhAnh.src = "../src/img/round2/Fisher.png";
+    this.hinhAnh.src = "src/img/round2/Fisher.png";
     this.hinhAnhDaLoad = false;
 
     this.hinhAnh1 = new Image();
-    this.hinhAnh1.src = "../src/img/round2/Fisher 1.png";
+    this.hinhAnh1.src = "src/img/round2/Fisher 1.png";
 
     this.hinhAnh.onload = () => {
       this.hinhAnhDaLoad = true;
