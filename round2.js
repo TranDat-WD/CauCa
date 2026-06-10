@@ -75,19 +75,27 @@ class fish {
   }
 
   capNhatViTri() {
-    if (this.y > canvas.height - 375) {
-      this.x = this.x + this.vx;
-      this.y = this.y + this.vy;
+  if (this.y <= canvas.height - 375) return;
 
-      // Kiểm tra va chạm biên
-      if (this.x < 0 || this.x + this.size > canvas.width) {
-        this.vx = -this.vx;
-      }
-      if (this.y < 0 || this.y + this.size > canvas.height) {
-        this.vy = -this.vy;
-      }
-    }
+  this.x += this.vx;
+  this.y += this.vy;
+
+  if (this.x < 0) {
+    this.x = 0;
+    this.vx *= -1;
+  } else if (this.x + this.size > canvas.width) {
+    this.x = canvas.width - this.size;
+    this.vx *= -1;
   }
+
+  if (this.y < 0) {
+    this.y = 0;
+    this.vy *= -1;
+  } else if (this.y + this.size > canvas.height) {
+    this.y = canvas.height - this.size;
+    this.vy *= -1;
+  }
+}
 
   veRoundRect() {
     ctx.strokeStyle = "rgb(16, 33, 53)";
