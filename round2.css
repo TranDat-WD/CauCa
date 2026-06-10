@@ -88,3 +88,68 @@ body > img:first-child {
   padding: 0;
   /* border: 5px solid red; */
 }
+
+.blackScreen {
+  opacity: 0;
+  pointer-events: none;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  transition: all 0.75s ease;
+}
+
+.notification {
+  position: absolute;
+  top: 25%;
+  left: 15%;
+  width: fit-content;
+  height: fit-content;
+  background-color: rgb(101, 123, 213);
+  border-radius: 30px;
+  border: 15px solid rgb(196, 207, 255);
+}
+
+.scoreContainer {
+  width: calc(70vw - 20px);
+  height: 50%;
+  margin: 10px;
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  align-items: center;
+  justify-items: center;
+  background-color: rgb(196, 207, 255);
+  border-radius: 30px;
+}
+
+.scoreContainer p {
+  font-size: 4rem;
+  font-weight: bold;
+  margin: 0;
+  padding: 20px;
+}
+
+.waiting {
+  width: calc(50vw);
+  height: 5rem;
+  margin: 10px auto;
+  font-size: 2rem;
+  color: #ffae00;
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  align-items: center;
+  justify-items: center;
+  background-color: rgb(196, 207, 255);
+  border-radius: 30px;
+  transition: all 0.25s ease;
+}
+
+.waiting:hover {
+  background-color: rgb(117, 142, 255);
+}
+
+.waiting:active {
+  background-color: rgb(41, 80, 255);
+}
