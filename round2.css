@@ -153,3 +153,24 @@ body > img:first-child {
 .waiting:active {
   background-color: rgb(41, 80, 255);
 }
+
+.baitCount {
+  width: 10vw;
+  height: 10vh;
+  position: fixed;
+  top: 125px;
+  left: 50px;
+  color: white;
+  justify-items: center;
+  align-content: center;
+  border-radius: 30px;
+  border: 15px solid rgb(196, 207, 255);
+  background-color: rgb(124, 155, 255);
+}
+
+.pBait {
+  font-size: 1.25rem;
+  color: #ffffff;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+  letter-spacing: 1px;
+}
