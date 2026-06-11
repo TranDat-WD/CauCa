@@ -4,6 +4,7 @@ let screenHeight = window.innerHeight;
 const ctx = canvas.getContext("2d");
 
 const blackScreen = document.getElementById("blackScreen");
+const countBait = document.querySelector("#pBaitCount");
 
 canvas.width = screenWidth * 2;
 canvas.height = screenHeight - 100;
@@ -421,6 +422,7 @@ canvas.addEventListener("mouseup", () => {
       }
     }
     catchedFish = null;
+    countBait.innerText = "Số mồi câu: " + fishingCount;
   }
   console.log(score + " - " + fishingCount);
   if (fishingCount == 0) {
