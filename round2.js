@@ -13,12 +13,16 @@ canvas.height = screenHeight - 100;
 let mouseX = 0;
 let mouseY = 0;
 let score = 0;
+let checkTick = false;
 let fishingCount = 9;
 
 function animation() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   fisher1.ve();
   fisher2.ve();
+  if (checkTick == true) {
+    checkAnswer.ve();
+  }
   for (let i = 0; i < fishList.length; i++) {
     if (fishList[i] != catchedFish) {
       fishList[i].capNhatViTri();
@@ -50,6 +54,13 @@ function checkCatched(fish) {
   }
 }
 
+function setCheckTickFor(seconds) {
+  checkTick = true;
+  setTimeout(() => {
+    checkTick = false;
+  }, seconds * 1000);
+}
+
 //Class
 
 class fish {
@@ -63,11 +74,11 @@ class fish {
     this.vy = 0;
 
     this.hinhAnh = new Image();
-    this.hinhAnh.src = "src/img/round2/Fish.png";
+    this.hinhAnh.src = "../src/img/round2/Fish.png";
     this.hinhAnhDaLoad = false;
 
     this.hinhAnh1 = new Image();
-    this.hinhAnh1.src = "src/img/round2/Fish_fliped.png";
+    this.hinhAnh1.src = "../src/img/round2/Fish_fliped.png";
 
     this.hinhAnh.onload = () => {
       this.hinhAnhDaLoad = true;
@@ -75,27 +86,27 @@ class fish {
   }
 
   capNhatViTri() {
-  if (this.y <= canvas.height - 375) return;
+    if (this.y <= canvas.height - 375) return;
 
-  this.x += this.vx;
-  this.y += this.vy;
+    this.x += this.vx;
+    this.y += this.vy;
 
-  if (this.x < 0) {
-    this.x = 0;
-    this.vx *= -1;
-  } else if (this.x + this.size > canvas.width) {
-    this.x = canvas.width - this.size;
-    this.vx *= -1;
+    if (this.x < 0) {
+      this.x = 0;
+      this.vx *= -1;
+    } else if (this.x + this.size > canvas.width) {
+      this.x = canvas.width - this.size;
+      this.vx *= -1;
+    }
+
+    if (this.y < 0) {
+      this.y = 0;
+      this.vy *= -1;
+    } else if (this.y + this.size > canvas.height) {
+      this.y = canvas.height - this.size;
+      this.vy *= -1;
+    }
   }
-
-  if (this.y < 0) {
-    this.y = 0;
-    this.vy *= -1;
-  } else if (this.y + this.size > canvas.height) {
-    this.y = canvas.height - this.size;
-    this.vy *= -1;
-  }
-}
 
   veRoundRect() {
     ctx.strokeStyle = "rgb(16, 33, 53)";
@@ -160,11 +171,11 @@ class monkey {
     this.say = says;
 
     this.hinhAnh = new Image();
-    this.hinhAnh.src = "src/img/round2/Fisher.png";
+    this.hinhAnh.src = "../src/img/round2/Fisher.png";
     this.hinhAnhDaLoad = false;
 
     this.hinhAnh1 = new Image();
-    this.hinhAnh1.src = "src/img/round2/Fisher 1.png";
+    this.hinhAnh1.src = "../src/img/round2/Fisher 1.png";
 
     this.hinhAnh.onload = () => {
       this.hinhAnhDaLoad = true;
@@ -226,6 +237,35 @@ class monkey {
   }
 }
 
+class check {
+  constructor(x, y, answer) {
+    this.x = x;
+    this.y = y;
+    this.answer = answer;
+    this.size = 50;
+
+    this.hinhAnh = new Image();
+    this.hinhAnh.src = "../src/img/round2/correct.png";
+    this.hinhAnhDaLoad = false;
+
+    this.hinhAnh1 = new Image();
+    this.hinhAnh1.src = "../src/img/round2/wrong.png";
+
+    this.hinhAnh.onload = () => {
+      this.hinhAnhDaLoad = true;
+    };
+  }
+  ve() {
+    if (this.hinhAnhDaLoad) {
+      if (this.answer == true) {
+        ctx.drawImage(this.hinhAnh, this.x, this.y, this.size, this.size);
+      } else {
+        ctx.drawImage(this.hinhAnh1, this.x, this.y, this.size, this.size);
+      }
+    }
+  }
+}
+
 // Tạo danh sách cá
 const dapAn = [
   ["Tứ giác ABCD có các cạnh đối AB và DC,", "AD và BC song song với nhau"],
@@ -264,6 +304,7 @@ const fishList = [];
 
 let fisher1 = new monkey(800 * 2, 125, ["Vì sao ABCD là hình bình hành?"]);
 let fisher2 = new monkey(1975, 50, ["Vì sao ABCD là hình thang cân?"]);
+let checkAnswer = new check(0, 0, false);
 
 animation();
 getMousePosition(canvas);
@@ -317,15 +358,27 @@ canvas.addEventListener("mousemove", (e) => {
 });
 
 canvas.addEventListener("mouseup", () => {
-  if (catchedFish != null) {
+  if (catchedFish != null && checkTick == false) {
     if (catchedFish.y <= canvas.height - 375) {
       if (catchedFish.x < 1975 && catchedFish.x > 1500) {
         fishingCount -= 1;
+        let finalAns = false;
         for (let i in dapAnTrai) {
           if (JSON.stringify(catchedFish.say) == JSON.stringify(dapAnTrai[i])) {
             score++;
+            finalAns = true;
+            checkAnswer.answer = true;
+            checkAnswer.x = catchedFish.x;
+            checkAnswer.y = catchedFish.y;
+            setCheckTickFor(1);
             break;
           }
+        }
+        if (finalAns == false) {
+          checkAnswer.answer = false;
+          checkAnswer.x = catchedFish.x;
+          checkAnswer.y = catchedFish.y;
+          setCheckTickFor(1);
         }
         for (let j in fishList) {
           if (
@@ -337,11 +390,23 @@ canvas.addEventListener("mouseup", () => {
         }
       } else if (catchedFish.x > 1975) {
         fishingCount -= 1;
+        let finalAns = false;
         for (let i in dapAnPhai) {
           if (JSON.stringify(catchedFish.say) == JSON.stringify(dapAnPhai[i])) {
             score++;
+            finalAns = true;
+            checkAnswer.answer = true;
+            checkAnswer.x = catchedFish.x;
+            checkAnswer.y = catchedFish.y;
+            setCheckTickFor(1);
             break;
           }
+        }
+        if (finalAns == false) {
+          checkAnswer.answer = false;
+          checkAnswer.x = catchedFish.x;
+          checkAnswer.y = catchedFish.y;
+          setCheckTickFor(1);
         }
         for (let j in fishList) {
           if (
