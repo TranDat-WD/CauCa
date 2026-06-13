@@ -366,7 +366,7 @@ canvas.addEventListener("mouseup", () => {
         let finalAns = false;
         for (let i in dapAnTrai) {
           if (JSON.stringify(catchedFish.say) == JSON.stringify(dapAnTrai[i])) {
-            score++;
+            score += 10;
             finalAns = true;
             checkAnswer.answer = true;
             checkAnswer.x = catchedFish.x;
@@ -376,6 +376,9 @@ canvas.addEventListener("mouseup", () => {
           }
         }
         if (finalAns == false) {
+          if (score - 5 > 0) {
+            score -= 5;
+          }
           checkAnswer.answer = false;
           checkAnswer.x = catchedFish.x;
           checkAnswer.y = catchedFish.y;
@@ -394,7 +397,7 @@ canvas.addEventListener("mouseup", () => {
         let finalAns = false;
         for (let i in dapAnPhai) {
           if (JSON.stringify(catchedFish.say) == JSON.stringify(dapAnPhai[i])) {
-            score++;
+            score += 10;
             finalAns = true;
             checkAnswer.answer = true;
             checkAnswer.x = catchedFish.x;
@@ -404,6 +407,9 @@ canvas.addEventListener("mouseup", () => {
           }
         }
         if (finalAns == false) {
+          if (score - 5 > 0) {
+            score -= 5;
+          }
           checkAnswer.answer = false;
           checkAnswer.x = catchedFish.x;
           checkAnswer.y = catchedFish.y;
